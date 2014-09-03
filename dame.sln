@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dame", "dame\dame.csproj", "{0791C314-574D-404C-AABD-A0371B8C95A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins", "Plugins\Plugins\Plugins.csproj", "{34D9C997-67E4-45D0-A525-07BE0E868411}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,10 @@ Global
 		{0791C314-574D-404C-AABD-A0371B8C95A9}.Debug|x86.Build.0 = Debug|x86
 		{0791C314-574D-404C-AABD-A0371B8C95A9}.Release|x86.ActiveCfg = Release|x86
 		{0791C314-574D-404C-AABD-A0371B8C95A9}.Release|x86.Build.0 = Release|x86
+		{34D9C997-67E4-45D0-A525-07BE0E868411}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{34D9C997-67E4-45D0-A525-07BE0E868411}.Debug|x86.Build.0 = Debug|Any CPU
+		{34D9C997-67E4-45D0-A525-07BE0E868411}.Release|x86.ActiveCfg = Release|Any CPU
+		{34D9C997-67E4-45D0-A525-07BE0E868411}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = dame\dame.csproj

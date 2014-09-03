@@ -19,6 +19,7 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <PlatformTarget>x86</PlatformTarget>
+    <Commandlineparameters>--ui gtk</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>full</DebugType>
@@ -36,6 +37,14 @@
     <Reference Include="gdk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="glib-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="pango-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="Evernote">
+      <HintPath>..\packages\Evernote.Core.0.5.0\lib\net40\Evernote.dll</HintPath>
+    </Reference>
+    <Reference Include="Thrift">
+      <HintPath>..\packages\Evernote.Core.0.5.0\lib\net40\Thrift.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="Gnome.Keyring, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1a73e1bde00c9b66" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -48,9 +57,36 @@
     <Compile Include="Utilities\ConcurrentObjectPool.cs">
       <DependentUpon>ObjectPool.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controller.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Data\Database.cs" />
+    <Compile Include="Data\Keyring.cs" />
+    <Compile Include="Data\Sync.cs" />
+    <Compile Include="Data\SyncState.cs">
+      <DependentUpon>Sync.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\SyncProgress.cs">
+      <DependentUpon>Sync.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Utilities\" />
+    <Folder Include="Data\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Resources\InitialDatabase.sql">
+      <DeployService-Deploy>True</DeployService-Deploy>
+      <DeployService-UseProjectRelativePath>True</DeployService-UseProjectRelativePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Plugins\Plugins\Plugins.csproj">
+      <Project>{34D9C997-67E4-45D0-A525-07BE0E868411}</Project>
+      <Name>Plugins</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
