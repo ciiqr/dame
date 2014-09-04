@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Utilities
+namespace dame.Utilities
 {
     abstract public class ObjectPool<T>
     {
@@ -14,6 +14,8 @@ namespace Utilities
 
         abstract public T Get();
         abstract public void Put(T item);
+
+        abstract public T TryGet();
     }
 }
 

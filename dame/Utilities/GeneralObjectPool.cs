@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Utilities
+namespace dame.Utilities
 {
     public class GeneralObjectPool<T> : ObjectPool<T>
     {
@@ -18,6 +18,14 @@ namespace Utilities
                 return _objects.Dequeue();
             else
                 return _objectGenerator(this);
+        }
+
+        override public T TryGet()
+        {
+            if (_objects.Count > 0)
+                return _objects.Dequeue();
+            else
+                return default(T);
         }
 
         override public void Put(T item)

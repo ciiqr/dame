@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace Utilities
+namespace dame.Utilities
 {
     public class ConcurrentObjectPool<T> : ObjectPool<T>
     {
@@ -18,6 +18,13 @@ namespace Utilities
             if (_objects.TryTake(out item))
                 return item;
             return _objectGenerator(this);
+        }
+
+        override public T TryGet()
+        {
+            T item;
+            _objects.TryTake(out item);
+            return item;
         }
 
         override public void Put(T item)
