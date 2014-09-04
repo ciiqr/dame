@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Globalization;
+
 using Evernote;
 using UserStoreConstants = Evernote.EDAM.UserStore.Constants;
 using Evernote.EDAM.UserStore;
@@ -11,12 +12,16 @@ using Thrift.Transport;
 
 namespace dame.Data.Sync
 {
+    public delegate void InitialSyncComplete(Evernote.EDAM.Type.User user, PremiumInfo premiumInfo);
+
     public class Sync
     {
-        const string EVERNOTE_HOST = "www.evernote.com";
-        const string EVERNOTE_SANDBOX_HOST = "sandbox.evernote.com";
-        const string EVERNOTE_CLIENT_KEY = "willvill1995";
-        const string EVERNOTE_CLIENT_SECRET = "d6a66c2726aa3a42";
+        private const string EVERNOTE_HOST = "www.evernote.com";
+        private const string EVERNOTE_SANDBOX_HOST = "sandbox.evernote.com";
+        private const string EVERNOTE_CLIENT_KEY = "willvill1995";
+        private const string EVERNOTE_CLIENT_SECRET = "d6a66c2726aa3a42";
+
+        public event InitialSyncComplete InitialSyncCompleteHandler;
 
         private string authToken;
         private bool isSandbox;
@@ -62,15 +67,6 @@ namespace dame.Data.Sync
         {
             this.authToken = authToken;
             this.isSandbox = isSandbox;
-
-            var username = "willvill1995";
-            // TODO: Move to the most appropriate place
-            // If it returns false, display an error to the user & allow them to login again
-            Keyring.saveAuthToken(username, "OMG, this is that random ass string that I need to authorize access to evernote");
-            // TODO: If getAuthToken returns null, display error & prompt for re-authorization
-            Console.WriteLine(Keyring.getAuthToken(username));
-
-            Console.Write("");
         }
 
         private bool isEdamVersionValid()
@@ -116,11 +112,15 @@ namespace dame.Data.Sync
 
                 throwIfCanceled();
                 updateProgress(100, SyncState.Downloading);
+
+                InitialSyncCompleteHandler(user, premiumInfo);
             }
             else
             {
                 Console.WriteLine("The client's evernote sdk version is out of date!");
+
                 // TODO: event with failed reason
+                InitialSyncCompleteHandler(null, null);
             }
         }
             
