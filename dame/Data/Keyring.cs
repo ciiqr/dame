@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 using Gnome.Keyring;
 
@@ -20,9 +21,11 @@ namespace dame.Data.Utilities
             var keyring = Ring.GetDefaultKeyring();
             foreach (int keystoreID in Ring.ListItemIDs(keyring))
             {
-                ItemData keyringItem = Ring.GetItemInfo(keyring, keystoreID);
-                if (username == (string)keyringItem.Attributes[USERNAME_ATTRIBUTE])
+                Hashtable attributes = Ring.GetItemAttributes(keyring, keystoreID);
+
+                if (username == (string)attributes[USERNAME_ATTRIBUTE])
                 {
+                    ItemData keyringItem = Ring.GetItemInfo(keyring, keystoreID);
                     authToken = keyringItem.Secret;
                     break;
                 }
@@ -36,7 +39,7 @@ namespace dame.Data.Utilities
             var keyring = Ring.GetDefaultKeyring();
             var description = String.Format("Evernote authtoken for '{0}' in '{1}'", username, Constants.APPLICATION_NAME);
             var attributes = new System.Collections.Hashtable(1);
-            attributes[USERNAME_ATTRIBUTE] = username;
+            attributes.Add(USERNAME_ATTRIBUTE, username);
 
             try
             {
