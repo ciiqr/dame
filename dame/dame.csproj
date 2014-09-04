@@ -68,6 +68,7 @@
     <Compile Include="Data\SyncProgress.cs">
       <DependentUpon>Sync.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\ExitCode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
