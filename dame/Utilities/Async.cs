@@ -7,8 +7,10 @@ using System.Runtime.CompilerServices;
 // A console app will not have an async context, therefore we would create one
 // https://nitoasyncex.codeplex.com/wikipage?title=AsyncContext
 
-namespace Utilities
+namespace dame.Utilities
 {
+    public delegate void ASyncLongDelegate(CancellationTokenSource cancellationTokenSource);
+
     public class Async
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -30,11 +32,11 @@ namespace Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static CancellationTokenSource aSyncLong(Action asynchronous)
+        public static CancellationTokenSource aSyncLong(ASyncLongDelegate asynchronous)
         {
             var tokenSource = new CancellationTokenSource();
 
-            Task longTask = Task.Factory.StartNew(asynchronous,
+            Task longTask = Task.Factory.StartNew(() => { asynchronous(tokenSource); },
                                 tokenSource.Token,
                                 TaskCreationOptions.DenyChildAttach | TaskCreationOptions.LongRunning,
                                 TaskScheduler.Default);
@@ -43,7 +45,6 @@ namespace Utilities
             {
                 tokenSource.Dispose();
             });
-
 
             return tokenSource;
         }
