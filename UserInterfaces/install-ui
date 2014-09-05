@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Declarations
+pluginDir="/usr/share/Dame/ui"
+userInterface="$1"
+
+# Create Plugin Directory
+sudo mkdir -p $pluginDir
+
+# Move user interface to plugin directory
+sudo \cp ./bin/Debug/"$userInterface.dll" $pluginDir
