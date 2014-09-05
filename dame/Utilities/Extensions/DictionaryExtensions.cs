@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace dame
+namespace dame.Utilities.Extensions
 {
-    public class DictionaryExtensions
+    public static class DictionaryExtensions
     {
-        public DictionaryExtensions()
+        public static TVal GetElse<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey key, TVal defaultValue = default(TVal))
         {
+            return dict.ContainsKey(key) ? dict[key] : defaultValue;
         }
     }
 }
