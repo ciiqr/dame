@@ -1,18 +1,19 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Collections.Generic;
 
+using dame.Data;
 using dame.Data.Sync;
 using dame.Data.Utilities;
 using dame.Utilities;
+using dame.Utilities.Extensions;
 using dame.Plugins;
 
 namespace dame
 {
     public class Controller
     {
-        private IUserInterface ui;
+        private UserInterface ui;
 
         private string _username;
         private string _authToken;
@@ -40,33 +41,33 @@ namespace dame
         {
             // TODO: Configure based on options
             // TODO: Initialize ui with either user specified ui OR gtk OR the first one we can find in the ui plugins directory
-            string userInterfaceName = options.ContainsKey(Constants.OPTIONS_UI_KEY) ? options[Constants.OPTIONS_UI_KEY] : Constants.DEFAULT_OPTION_UI;
-            Console.WriteLine(Path.Combine(Constants.USER_INTERFACE_PLUGINS_DIRECTORY, userInterfaceName));
+            string userInterfaceName = options.GetElse(Constants.OPTIONS_UI_KEY, Constants.DEFAULT_OPTION_UI);
+
+            ui = Plugins.Plugins.LoadUserInterface(userInterfaceName);
 
             // TODO: Initialize user with user specified user OR the user we grab some other way
             // TODO: Get from initial sync when applicable
             _username = "willvill1995";
+
+
+            Console.WriteLine(Conversion.Convert(DocumentType.HTML, DocumentType.XHTML, "<html><body><p>This is some test test<ul><li>item 1<li>item2<</ul></body>"));
+            Console.WriteLine(Conversion.Convert(DocumentType.HTML, DocumentType.XHTML, "<html><body><p>This is some test test<p><ul><li>item 1</li><li>item2<</ul></body>"));
+
+
+//            // TODO: Assume the user is the file name of the database in ~/.config/Dame/willvill1995/willvill1995.db
+//            // TODO: Check if we have a user database already
+//            // TODO: Check if we have an auth token for the user
+//            //  - If getAuthToken returns null, display error & prompt for re-authorization
+//            string authToken = Keyring.getAuthToken(_username);
+//
+//            // TODO: Implement OAuth
+//            //            bool isSandbox = true;
+//            //            OAuthTokenRecieved(authToken, isSandbox);
         }
 
         public void Run()
         {
-            // TODO: Assume the user is the file name of the database in ~/.config/Dame/willvill1995/willvill1995.db
-            // TODO: Decide how we're getting the username, probably store in a property so we don't need to pass it around so much
-            // TODO: Check if we have a user database already
-            // TODO: Check if we have an auth token for the user
-            //  - If getAuthToken returns null, display error & prompt for re-authorization
-            string authToken = Keyring.getAuthToken(_username);
-
-            // TODO: Implement OAuth
-            bool isSandbox = true;
-            OAuthTokenRecieved(authToken, isSandbox);
-
-            // TODO: Run ui's runLoop
-//            ui.RunMainLoop();
-            while(true)
-            {
-                System.Threading.Thread.Sleep(1000); 
-            }
+            ui.runMainLoop();
         }
 
         private void OAuthTokenRecieved(string authToken, bool isSandbox)

@@ -33,10 +33,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Mono.Data.Sqlite" />
-    <Reference Include="gtk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="gdk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="glib-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="pango-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="Evernote">
       <HintPath>..\packages\Evernote.Core.0.5.0\lib\net40\Evernote.dll</HintPath>
     </Reference>
@@ -45,6 +41,11 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="Gnome.Keyring, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1a73e1bde00c9b66" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -69,12 +70,18 @@
       <DependentUpon>Sync.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities\ExitCode.cs" />
+    <Compile Include="Data\Conversion.cs" />
+    <Compile Include="Data\DocumentType.cs" />
+    <Compile Include="Data\ExternalDocument.cs" />
+    <Compile Include="Plugins.cs" />
+    <Compile Include="Utilities\Extensions\DictionaryExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Utilities\" />
     <Folder Include="Data\" />
     <Folder Include="Resources\" />
+    <Folder Include="Utilities\Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
