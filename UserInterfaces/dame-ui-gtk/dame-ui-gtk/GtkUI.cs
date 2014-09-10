@@ -6,6 +6,8 @@ namespace dameuigtk
 {
     public class GtkUI : UserInterface
     {
+        override public event UserInterfaceMainLoopInitialized mainLoopInitializedEvent;
+
         // TODO: Determine how to use a custom application
         private Gtk.Application application = new Gtk.Application("ca.williamvilleneuve.dame", GLib.ApplicationFlags.None);
 
@@ -20,6 +22,8 @@ namespace dameuigtk
 
         private void onActivated(object sender, EventArgs e)
         {
+            mainLoopInitializedEvent(this);
+
             window = new Gtk.Window("Dame - Oh Yeah!");
             window.DeleteEvent += onWindowDeleted;
             window.ShowAll();

@@ -2,8 +2,12 @@
 
 namespace dame.Plugins
 {
+    public delegate void UserInterfaceMainLoopInitialized(UserInterface sender);
+
     public abstract class UserInterface
     {
+        public abstract event UserInterfaceMainLoopInitialized mainLoopInitializedEvent;
+
         abstract public void runMainLoop();
         abstract public void stopMainLoop();
 
@@ -14,8 +18,6 @@ namespace dame.Plugins
         // Menubars
         // Toolbars
         // etc
-
-        // Lots of Events aswell
     }
 }
 
