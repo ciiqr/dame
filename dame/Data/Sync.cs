@@ -4,6 +4,7 @@ using System.Globalization;
 
 using Evernote;
 using UserStoreConstants = Evernote.EDAM.UserStore.Constants;
+using Evernote.EDAM.Type;
 using Evernote.EDAM.UserStore;
 using Evernote.EDAM.NoteStore;
 using Thrift;
@@ -12,7 +13,7 @@ using Thrift.Transport;
 
 namespace dame.Data.Sync
 {
-    public delegate void InitialSyncComplete(Evernote.EDAM.Type.User user, PremiumInfo premiumInfo);
+    public delegate void InitialSyncComplete(User user, PremiumInfo premiumInfo);
 
     public class Sync
     {
@@ -83,6 +84,7 @@ namespace dame.Data.Sync
             throwIfCanceled();
             updateProgress(0, SyncState.Downloading);
 
+            // TODO: This will fail without internet access
             if (isEdamVersionValid())
             {
                 throwIfCanceled();
@@ -98,21 +100,19 @@ namespace dame.Data.Sync
                 throwIfCanceled();
                 updateProgress(66, SyncState.Downloading);
 
-                PremiumInfo premiumInfo = null;
-
-                if (user.Accounting.PremiumServiceStatus != Evernote.EDAM.Type.PremiumOrderStatus.NONE)
-                    premiumInfo = userStore.getPremiumInfo(authToken);
+                PremiumInfo premiumInfo = getPremiumInfo(user);
 
                 throwIfCanceled();
                 updateProgress(99, SyncState.Downloading);
 
                 // TODO: We will call out an event when this is done
-                Console.WriteLine(user);
-                Console.WriteLine(premiumInfo);
+                Console.WriteLine("User:" + user);
+                Console.WriteLine("User Premium:" + premiumInfo);
 
                 throwIfCanceled();
                 updateProgress(100, SyncState.Downloading);
 
+                // TODO: Do I want to change to return?
                 InitialSyncCompleteHandler(user, premiumInfo);
             }
             else
@@ -122,6 +122,14 @@ namespace dame.Data.Sync
                 // TODO: event with failed reason
                 InitialSyncCompleteHandler(null, null);
             }
+        }
+
+        public PremiumInfo getPremiumInfo(User user)
+        {
+            PremiumInfo premiumInfo = null;
+            if (user.Privilege != PrivilegeLevel.NORMAL)
+                premiumInfo = userStore.getPremiumInfo(authToken);
+            return premiumInfo;
         }
             
         void sync(CancellationToken cancelationToken, IProgress<SyncProgress> progressReporter)
