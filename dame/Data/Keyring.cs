@@ -8,17 +8,20 @@ namespace dame.Data.Utilities
     public class Keyring
     {
         private const string USERNAME_ATTRIBUTE = "username";
+        private const string IS_SANDBOX_ATTRIBUTE = "isSandbox";
 
         static Keyring()
         {
             Ring.ApplicationName = Constants.APPLICATION_NAME;
         }
 
-        public static string getAuthToken(string username)
+        public static string getAuthToken(string username, out bool isSandbox)
         {
             string authToken = null;
-
             var keyring = Ring.GetDefaultKeyring();
+
+            isSandbox = false;
+
             foreach (int keystoreID in Ring.ListItemIDs(keyring))
             {
                 Hashtable attributes = Ring.GetItemAttributes(keyring, keystoreID);
@@ -27,6 +30,7 @@ namespace dame.Data.Utilities
                 {
                     ItemData keyringItem = Ring.GetItemInfo(keyring, keystoreID);
                     authToken = keyringItem.Secret;
+                    isSandbox = Convert.ToBoolean(attributes[IS_SANDBOX_ATTRIBUTE]);
                     break;
                 }
             }
@@ -34,12 +38,13 @@ namespace dame.Data.Utilities
             return authToken;
         }
 
-        public static bool saveAuthToken(string username, string authToken)
+        public static bool saveAuthToken(string username, string authToken, bool isSandbox)
         {
             var keyring = Ring.GetDefaultKeyring();
             var description = String.Format("Evernote authtoken for '{0}' in '{1}'", username, Constants.APPLICATION_NAME);
-            var attributes = new System.Collections.Hashtable(1);
+            var attributes = new System.Collections.Hashtable(2);
             attributes.Add(USERNAME_ATTRIBUTE, username);
+            attributes.Add(IS_SANDBOX_ATTRIBUTE, isSandbox.ToString());
 
             try
             {
@@ -48,7 +53,7 @@ namespace dame.Data.Utilities
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
                 return false;
             }
         }
