@@ -19,7 +19,6 @@
 -- NOTES --
 -----------
 -- Testing This File: sqlite3 test.db < DefaultDatabase.sql
--- could add "CHECK BETWEEN" constraints, though it will make little difference in the end
 -- x Resources, when a Resource is dirty, that means it's new, if it changes in any way, we create a new resource (really just delete it's guid, send the deleted update & addNewNote with all the resources set)
 	-- x NOTE: Doing it this way because evernote only supports updating the meta-data anyways, I can always change this in the future so that the meta-data can be updated without creating a whole new resource
 	-- !! Not Necessary, simply chekc the resources updateSequenceNum, dirty can still mean a change in the meta-data,!!
@@ -27,22 +26,11 @@
 -- TODO --
 ----------
 -- Add Constraints (UNIQUE, NULL, NOT NULL, etc.)
--- Add dirty for most(Main) tables
-	-- On Notes, Notebooks, Tags, SavedSearched, Resources
-	-- ? Users, LinkedNotebooks, SharedNotebooks (One of these 2 may have it but the other wont, I believe it is the SHared that will have it...)
-	-- Really how it should go is anything I don't want to add to say a Note when updating I will have a dirty flag in some way (even if indirectly)
+-- ? Dirty? Users, SharedNotebooks
 -- Add NOT NULL to all necessary fields
 -- Consider moving SavedSearchScope fields to SavedSearch
 -- Consider moving SharedNotebookRecipientSettings fields to SharedNotebook
--- Data.body - Store in a resources subfolder ~/.cache/dame/username/data/*
-	-- where * is Data.uid
--- Do I want to default dirty to False?
-
--- Because in notebooks we have contactId which is a user, meant for business accounts, there can be more than one user in the Users table & I need to account for that... (Need a Default User flag or something, or not casuse I can just use the username which I grab from the config file/directory)
-	
--- Consider the following constraints
---	- CHECK
---	- DEFAULT
+-- Data.body - Store in a resources subfolder ie. ~/.cache/dame/{username}/data/{Data.uid}
 
 -- DOCUMENTATION --
 -------------------
@@ -69,6 +57,7 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE BootstrapSettings (
+	userId					INTEGER		PRIMARY KEY		NOT NULL,
 	serviceHost				TEXT,
 	marketingUrl			TEXT,
 	supportUrl				TEXT,
