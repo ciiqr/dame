@@ -13,6 +13,9 @@ namespace dame.Utilities
 
     public class Async
     {
+        // TODO: Maybe create method to initialize it so we know for sure we will always have a SyncContext, would be called just before runloop
+        private static SynchronizationContext mainThreadContext = SynchronizationContext.Current;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void aSync(Action asynchronous)
         {
@@ -25,7 +28,7 @@ namespace dame.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void main(Action mainCall)
         {
-            SynchronizationContext.Current.Post(delegate
+            mainThreadContext.Post(delegate
             {
                 mainCall();
             }, null);
@@ -45,6 +48,14 @@ namespace dame.Utilities
             {
                 tokenSource.Dispose();
             });
+
+            #if DEBUG
+            longTask.ContinueWith((t) =>
+            {
+                Console.WriteLine("Async Exception: {0}", t.Exception.InnerExceptions);
+
+            });
+            #endif
 
             return tokenSource;
         }
