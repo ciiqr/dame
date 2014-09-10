@@ -7,6 +7,7 @@ namespace dame.Data
     public static class Conversion
     {
         // TODO: May be necessary to use Streams for performance & memory usage
+        // TODO: Add a CancalationToken parameter, only for this method, and will use between multi-step conversions & after converting before returning
         public static string Convert(DocumentType fromType, DocumentType toType, string input)
         {
             // TODO: Implement many convertsions
