@@ -1,14 +1,19 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 
 using dame.Utilities;
 
 namespace dame
 {
-    class MainClass
+    class Program
     {
         public static void Main(string[] args)
         {
+            // TODO: Move to the most appropriate place
+            if (!Directory.Exists(Constants.USER_CONFIG_DIRECTORY))
+                Directory.CreateDirectory(Constants.USER_CONFIG_DIRECTORY);
+
             // Parse options
             var options = ParseArguments(args);
             ValidateOptions(options);
@@ -30,13 +35,13 @@ namespace dame
                     PrintHelp();
                     Environment.Exit(ExitCode.SUCCESS);
                 }
-                else if (arg == ("--" + Constants.OPTIONS_DBPATH_KEY))
+                else if (arg == ("--" + Constants.OPTIONS_USERNAME_KEY))
                 {
                     index++;
                     if (index < arg.Length)
-                        options[Constants.OPTIONS_DBPATH_KEY] = args[index];
+                        options[Constants.OPTIONS_USERNAME_KEY] = args[index];
                     else
-                        ExitWithReason("Must provide path for " + Constants.OPTIONS_DBPATH_KEY);
+                        ExitWithReason("Must provide username for " + Constants.OPTIONS_USERNAME_KEY);
                 }
                 else if (arg == ("--" + Constants.OPTIONS_UI_KEY))
                 {
@@ -61,8 +66,8 @@ namespace dame
             Console.WriteLine("Dame: Evernote Client");
             Console.WriteLine("=====================");
             Console.WriteLine("-h | --help\tDisplay this menu");
-            Console.WriteLine("--dbpath\tPath to database");
-            Console.WriteLine("--ui\tUser interface type (ie. gtk, qt, ncurses)");
+            Console.WriteLine("--username\tEvernote username");
+            Console.WriteLine("--ui\tUser interface type ie. gtk, qt, ncurses (only gtk supported atm)");
             Console.WriteLine("=====================");
         }
 
@@ -74,16 +79,14 @@ namespace dame
 
         public static void ValidateOptions(Dictionary<string, string> options)
         {
-            string dbpath;
+            string username;
+            string uiName;
 
-            if (options.TryGetValue("dbpath", out dbpath) && !Uri.IsWellFormedUriString(dbpath, UriKind.Absolute))
-                ExitWithReason(String.Format("Options is not a valid file path:{0}", dbpath));
+            if (options.TryGetValue(Constants.OPTIONS_USERNAME_KEY, out username) && !DameUser.databaseExists(username)) // Uri.IsWellFormedUriString(username, UriKind.Absolute)
+                ExitWithReason(String.Format("User database does not exist:{0}", username));
 
-            // TODO: Check if the given ui exists on disk?
-//            bool UserInterfaceProxy.exists();
-//            UserInterface UserInterfaceProxy.Load();
-//            UserInterface UserInterfaceProxy.UnLoad();
-
+            if (options.TryGetValue(Constants.OPTIONS_UI_KEY, out uiName) && !Plugins.Plugins.uiExists(uiName))
+                ExitWithReason(String.Format("UI plugin does not exist:{0}", uiName));
         }
     }
 }
@@ -100,15 +103,6 @@ namespace dame
 //    });
 //};
 //timer.Start();
-
-// Directory's
-//// User config
-//String CONFIG_DIR = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "APPLICATION_NAME");
-//Console.WriteLine("ApplicationData: " + CONFIG_DIR);
-//// User folder, can then get .cache, or implemenet XDG.BaseDirectory
-//Console.WriteLine("UserProfile: " + Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
-//// Plugins
-//Console.WriteLine("CommonApplicationData: " + Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
 
 // Enum Values
 //Enum.GetValues(typeof(Sync.SyncState))
