@@ -51,8 +51,9 @@ namespace dame
             setupUIEvents();
 
             // TODO: Testing
-//            Console.WriteLine(Conversion.Convert(DocumentType.HTML, DocumentType.XHTML, "<html><body><p>This is some test test<ul><li>item 1<li>item2<</ul></body>"));
-//            Console.WriteLine(Conversion.Convert(DocumentType.HTML, DocumentType.XHTML, "<html><body><p>This is some test test<p><ul><li>item 1</li><li>item2<</ul></body>"));
+            Console.WriteLine(Conversion.Convert(DocumentType.HTML, DocumentType.XHTML, "<html><body><p>This is some test test<ul><li>item 1<li>item2<</ul></body>"));
+            Console.WriteLine(Conversion.Convert(DocumentType.HTML, DocumentType.XHTML, "<html><body><p>This is some test test<p><ul><li>item 1</li><li>item2<</ul></body>"));
+            Console.WriteLine();
         }
 
         private void setupUIEvents()
@@ -156,7 +157,8 @@ namespace dame
                         }
 
                         DameUser.createUserDirectory(DameUser.currentUser);
-                        db.initializeDatabaseWithUser(user);
+                        db.initializeDatabase();
+                        db.addUser(user);
 
                         // TODO: Send premiumInfo to database
 

@@ -42,6 +42,9 @@ CREATE TABLE Sync (
 	lastSyncTime	INT
 );
 
+-- TODO: Should this be -1? Would 0 be alright?
+INSERT INTO Sync (lastUpdateCount,lastSyncTime) VALUES(-1, -1);
+
 -- USER --
 
 CREATE TABLE Users (

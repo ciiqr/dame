@@ -36,17 +36,16 @@ namespace dame.Data
             });
         }
 
-        public void initializeDatabaseWithUser(User user)
+        public void initializeDatabase()
         {
             PerformOperation((conn, command) =>
             {
                 using (var setupSqlReader = new StreamReader(Constants.INITIAL_DATABASE_PATH))
                 {
-                    command.CommandText = setupSqlReader.ReadToEnd();
                     try
                     {
-                        command.ExecuteNonQuery(); // NOTE: If the sql is invalid, this doesn't seem to return
-                        Console.WriteLine("Done initializing database");
+                        command.CommandText = setupSqlReader.ReadToEnd();
+                        command.ExecuteNonQuery();
                     }
                     catch (Exception ex)
                     {
@@ -54,10 +53,6 @@ namespace dame.Data
                         Console.WriteLine(ex);
                     }
                 }
-                    
-                addUser(user);
-                // TODO: Add Sync row
-                //            private addInitialSyncInfo() {lastSyncDate = 0, lastUpdateCount = 0} updateSync(lastSyncDate = 0, lastUpdateCount = 0)
             });
         }
 
