@@ -1,0 +1,3 @@
+SQL File to Database Constants
+Replace : (\w+)\t+(BOOLEAN|INTEGER|INT|REAL|TEXT)
+With 	: public const string \1 = \"\1\"; /\*\2\*/
