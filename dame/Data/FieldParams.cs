@@ -13,8 +13,8 @@ namespace dame.Data
 
         public static class Sync
         {
-            public const string SyncLastUpdateCount = "@" + Fields.Sync.SyncLastUpdateCount;
-            public const string SyncLastSyncTime = "@" + Fields.Sync.SyncLastSyncTime;
+            public const string LastUpdateCount = "@" + Fields.Sync.LastUpdateCount;
+            public const string LastSyncTime = "@" + Fields.Sync.LastSyncTime;
         }
 
         public static class Users
@@ -163,29 +163,29 @@ namespace dame.Data
             public const string Recommended = "@" + Fields.BusinessNotebook.Recommended;
         }
 
-        public static class NotebookRescrictions
+        public static class NotebookRestrictions
         {
-            public const string NotebookLuid = "@" + Fields.NotebookRescrictions.NotebookLuid;
-            public const string NoReadNotes = "@" + Fields.NotebookRescrictions.NoReadNotes;
-            public const string NoCreateNotes = "@" + Fields.NotebookRescrictions.NoCreateNotes;
-            public const string NoUpdateNotes = "@" + Fields.NotebookRescrictions.NoUpdateNotes;
-            public const string NoExpungeNotes = "@" + Fields.NotebookRescrictions.NoExpungeNotes;
-            public const string NoShareNotes = "@" + Fields.NotebookRescrictions.NoShareNotes;
-            public const string NoEmailNotes = "@" + Fields.NotebookRescrictions.NoEmailNotes;
-            public const string NoSendMessageToRecipients = "@" + Fields.NotebookRescrictions.NoSendMessageToRecipients;
-            public const string NoUpdateNotebook = "@" + Fields.NotebookRescrictions.NoUpdateNotebook;
-            public const string NoExpungeNotebook = "@" + Fields.NotebookRescrictions.NoExpungeNotebook;
-            public const string NoSetDefaultNotebook = "@" + Fields.NotebookRescrictions.NoSetDefaultNotebook;
-            public const string NoSetNotebookStack = "@" + Fields.NotebookRescrictions.NoSetNotebookStack;
-            public const string NoPublishToPublic = "@" + Fields.NotebookRescrictions.NoPublishToPublic;
-            public const string NoPublishToBusinessLibrary = "@" + Fields.NotebookRescrictions.NoPublishToBusinessLibrary;
-            public const string NoCreateTags = "@" + Fields.NotebookRescrictions.NoCreateTags;
-            public const string NoUpdateTags = "@" + Fields.NotebookRescrictions.NoUpdateTags;
-            public const string NoExpungeTags = "@" + Fields.NotebookRescrictions.NoExpungeTags;
-            public const string NoSetParentTag = "@" + Fields.NotebookRescrictions.NoSetParentTag;
-            public const string NoCreateSharedNotebooks = "@" + Fields.NotebookRescrictions.NoCreateSharedNotebooks;
-            public const string UpdateWhichSharedNotebookRestrictions = "@" + Fields.NotebookRescrictions.UpdateWhichSharedNotebookRestrictions;
-            public const string ExpungeWhichSharedNotebookRestrictions = "@" + Fields.NotebookRescrictions.ExpungeWhichSharedNotebookRestrictions;
+            public const string NotebookLuid = "@" + Fields.NotebookRestrictions.NotebookLuid;
+            public const string NoReadNotes = "@" + Fields.NotebookRestrictions.NoReadNotes;
+            public const string NoCreateNotes = "@" + Fields.NotebookRestrictions.NoCreateNotes;
+            public const string NoUpdateNotes = "@" + Fields.NotebookRestrictions.NoUpdateNotes;
+            public const string NoExpungeNotes = "@" + Fields.NotebookRestrictions.NoExpungeNotes;
+            public const string NoShareNotes = "@" + Fields.NotebookRestrictions.NoShareNotes;
+            public const string NoEmailNotes = "@" + Fields.NotebookRestrictions.NoEmailNotes;
+            public const string NoSendMessageToRecipients = "@" + Fields.NotebookRestrictions.NoSendMessageToRecipients;
+            public const string NoUpdateNotebook = "@" + Fields.NotebookRestrictions.NoUpdateNotebook;
+            public const string NoExpungeNotebook = "@" + Fields.NotebookRestrictions.NoExpungeNotebook;
+            public const string NoSetDefaultNotebook = "@" + Fields.NotebookRestrictions.NoSetDefaultNotebook;
+            public const string NoSetNotebookStack = "@" + Fields.NotebookRestrictions.NoSetNotebookStack;
+            public const string NoPublishToPublic = "@" + Fields.NotebookRestrictions.NoPublishToPublic;
+            public const string NoPublishToBusinessLibrary = "@" + Fields.NotebookRestrictions.NoPublishToBusinessLibrary;
+            public const string NoCreateTags = "@" + Fields.NotebookRestrictions.NoCreateTags;
+            public const string NoUpdateTags = "@" + Fields.NotebookRestrictions.NoUpdateTags;
+            public const string NoExpungeTags = "@" + Fields.NotebookRestrictions.NoExpungeTags;
+            public const string NoSetParentTag = "@" + Fields.NotebookRestrictions.NoSetParentTag;
+            public const string NoCreateSharedNotebooks = "@" + Fields.NotebookRestrictions.NoCreateSharedNotebooks;
+            public const string UpdateWhichSharedNotebookRestrictions = "@" + Fields.NotebookRestrictions.UpdateWhichSharedNotebookRestrictions;
+            public const string ExpungeWhichSharedNotebookRestrictions = "@" + Fields.NotebookRestrictions.ExpungeWhichSharedNotebookRestrictions;
         }
 
         public static class Tags

@@ -13,8 +13,8 @@ namespace dame.Data
 
         public static class Sync
         {
-            public const string SyncLastUpdateCount = "SyncLastUpdateCount";
-            public const string SyncLastSyncTime = "SyncLastSyncTime";
+            public const string LastUpdateCount = "SyncLastUpdateCount";
+            public const string LastSyncTime = "SyncLastSyncTime";
         }
 
         public static class Users
@@ -163,7 +163,7 @@ namespace dame.Data
             public const string Recommended = "Recommended";
         }
 
-        public static class NotebookRescrictions
+        public static class NotebookRestrictions
         {
             public const string NotebookLuid = "NotebookLuid";
             public const string NoReadNotes = "NoReadNotes";

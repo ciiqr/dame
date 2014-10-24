@@ -42,8 +42,7 @@ CREATE TABLE Sync (
 	lastSyncTime	INT
 );
 
--- TODO: Should this be -1? Would 0 be alright?
-INSERT INTO Sync (lastUpdateCount,lastSyncTime) VALUES(-1, -1);
+INSERT INTO Sync (lastUpdateCount,lastSyncTime) VALUES(0, 0);
 
 -- USER --
 
@@ -195,7 +194,7 @@ CREATE TABLE BusinessNotebook (
 	FOREIGN KEY(notebookLuid)		REFERENCES Notebooks(luid)
 );
 
-CREATE TABLE NotebookRescrictions (
+CREATE TABLE NotebookRestrictions (
 	notebookLuid							INTEGER		PRIMARY KEY		NOT NULL,
 	noReadNotes								BOOLEAN,
 	noCreateNotes							BOOLEAN,

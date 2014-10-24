@@ -33,18 +33,18 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Mono.Data.Sqlite" />
-    <Reference Include="Evernote">
-      <HintPath>..\packages\Evernote.Core.0.5.0\lib\net40\Evernote.dll</HintPath>
-    </Reference>
-    <Reference Include="Thrift">
-      <HintPath>..\packages\Evernote.Core.0.5.0\lib\net40\Thrift.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="Gnome.Keyring, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1a73e1bde00c9b66" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.8\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="Evernote">
+      <HintPath>..\packages\Evernote.SDK.1.25\lib\net45\Evernote.dll</HintPath>
+    </Reference>
+    <Reference Include="Thrift">
+      <HintPath>..\packages\Evernote.SDK.1.25\lib\net45\Thrift.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +86,10 @@
       <DependentUpon>Database.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Extensions\SqliteDataReaderExtensions.cs" />
+    <Compile Include="Data\Database_DataAccess.cs">
+      <DependentUpon>Database.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Types.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

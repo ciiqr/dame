@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading;
+using System.Collections.Generic;
 using System.Globalization;
 
-using Evernote;
 using UserStoreConstants = Evernote.EDAM.UserStore.Constants;
-using Evernote.EDAM.Type;
+using EDAM = Evernote.EDAM.Type;
 using Evernote.EDAM.UserStore;
 using Evernote.EDAM.NoteStore;
 using Thrift;
@@ -13,7 +13,7 @@ using Thrift.Transport;
 
 namespace dame.Data.Sync
 {
-    public delegate void InitialSyncComplete(User user, PremiumInfo premiumInfo);
+    public delegate void InitialSyncComplete(EDAM.User user, EDAM.PremiumInfo premiumInfo);
 
     public class Sync
     {
@@ -21,6 +21,9 @@ namespace dame.Data.Sync
         private const string EVERNOTE_SANDBOX_HOST = "sandbox.evernote.com";
         private const string EVERNOTE_CLIENT_KEY = "willvill1995";
         private const string EVERNOTE_CLIENT_SECRET = "d6a66c2726aa3a42";
+
+        public const string InitialSyncUserKey = "User";
+        public const string InitialSyncPremiumKey = "PremiumInfo";
 
         public event InitialSyncComplete InitialSyncCompleteHandler;
 
@@ -77,7 +80,7 @@ namespace dame.Data.Sync
                 UserStoreConstants.EDAM_VERSION_MINOR);
         }
 
-        public void initialSync(CancellationToken cancelationToken, IProgress<SyncProgress> progressReporter)
+        public Dictionary<string, TBase> initialSync(CancellationToken cancelationToken, IProgress<SyncProgress> progressReporter)
         {
             setupForAsync(cancelationToken, progressReporter);
 
@@ -95,12 +98,13 @@ namespace dame.Data.Sync
                 throwIfCanceled();
                 updateProgress(33, SyncState.Downloading);
 
+                // NOTE: It is actually an EDAM.User & I know this, which means that this is unsafe
                 var user = userStore.getUser(authToken);
 
                 throwIfCanceled();
                 updateProgress(66, SyncState.Downloading);
 
-                PremiumInfo premiumInfo = getPremiumInfo(user);
+                var premiumInfo = getPremiumInfo(user);
 
                 throwIfCanceled();
                 updateProgress(99, SyncState.Downloading);
@@ -114,20 +118,26 @@ namespace dame.Data.Sync
 
                 // TODO: Do I want to change to return?
                 InitialSyncCompleteHandler(user, premiumInfo);
+
+                var userInfo = new Dictionary<string, TBase>(2);
+                userInfo.Add(Sync.InitialSyncUserKey, user);
+                userInfo.Add(Sync.InitialSyncPremiumKey, premiumInfo);
+
+                return userInfo;
             }
             else
             {
                 Console.WriteLine("The client's evernote sdk version is out of date!");
 
                 // TODO: event with failed reason
-                InitialSyncCompleteHandler(null, null);
+                return null;
             }
         }
 
-        public PremiumInfo getPremiumInfo(User user)
+        public EDAM.PremiumInfo getPremiumInfo(EDAM.User user)
         {
-            PremiumInfo premiumInfo = null;
-            if (user.Privilege != PrivilegeLevel.NORMAL)
+            EDAM.PremiumInfo premiumInfo = null;
+            if (user.Privilege != EDAM.PrivilegeLevel.NORMAL)
                 premiumInfo = userStore.getPremiumInfo(authToken);
             return premiumInfo;
         }

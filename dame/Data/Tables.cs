@@ -14,7 +14,7 @@ namespace dame
         public const string Notebooks = "Notebooks";
         public const string Publishing = "Publishing";
         public const string BusinessNotebook = "BusinessNotebook";
-        public const string NotebookRescrictions = "NotebookRescrictions";
+        public const string NotebookRestrictions = "NotebookRestrictions";
         public const string Tags = "Tags";
         public const string Notes = "Notes";
         public const string NoteTags = "NoteTags";

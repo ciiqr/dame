@@ -3,6 +3,8 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 
+using EDAM = Evernote.EDAM.Type;
+
 using dame.Data;
 using dame.Data.Sync;
 using dame.Data.Utilities;
@@ -120,7 +122,8 @@ namespace dame
             // TODO: Testing
             Async.aSyncLong(delegate
             {
-                var user = db.getUser(_username);
+                // TODO: Only cause we haven't implemented yet, and we will probably implement in a different way anyways
+//                var user = db.GetUser(_username);
 
             });
         }
@@ -144,27 +147,6 @@ namespace dame
                 //            this.initialSyncCanceler = 
                 Async.aSyncLong((initialSyncCanceler) =>
                 {
-                    InitialSyncComplete doneHandler = null;
-                    doneHandler = (user, premiumInfo) =>
-                    {
-                        sync.InitialSyncCompleteHandler -= doneHandler;
-
-                        if (!Keyring.saveAuthToken(_username, authToken, isSandbox))
-                        {
-                            // TODO: Display an error to the user & allow them to try to login again
-                            //                        ui.displayPopupMessage(title:"Error Logging In", message:"Could not save authorization token in the keyring");
-                            Console.Write("");
-                        }
-
-                        DameUser.createUserDirectory(DameUser.currentUser);
-                        db.initializeDatabase();
-                        db.addUser(user);
-
-                        // TODO: Send premiumInfo to database
-
-                    };
-                    sync.InitialSyncCompleteHandler += doneHandler;
-
                     var progressHandler = new Progress<SyncProgress>();
                     progressHandler.ProgressChanged += (object sender, SyncProgress e) =>
                     {
@@ -176,7 +158,23 @@ namespace dame
 
                     // TODO: Should return user from this method?
                     // TODO: Currently throws an exception when offline
-                    sync.initialSync(initialSyncCanceler.Token, progressHandler);
+                    var userInfo = sync.initialSync(initialSyncCanceler.Token, progressHandler);
+
+                    var user = (EDAM.User)userInfo[Sync.InitialSyncUserKey];
+                    var premiumInfo = (EDAM.PremiumInfo)userInfo[Sync.InitialSyncUserKey];
+
+                    if (!Keyring.saveAuthToken(_username, authToken, isSandbox))
+                    {
+                        // TODO: Display an error to the user & allow them to try to login again
+                        //                        ui.displayPopupMessage(title:"Error Logging In", message:"Could not save authorization token in the keyring");
+                        Console.Write("");
+                    }
+
+                    DameUser.createUserDirectory(DameUser.currentUser);
+                    db.initializeDatabase();
+                    db.AddUser(user);
+
+                    // TODO: Send premiumInfo to database
                 });
             }
             else
