@@ -76,10 +76,18 @@ namespace dame.Data
         public long NoteLuid { get; set; }
     }
 
+    public class Data : EDAM.Data
+    {
+        // TODO: Use the below to access the bytes, need to grab the file from the filesystem though
+//        public bytep[] GetBody()
+//        {
+//            return (this.__isset.body) ? this.Body : 
+//        }
+    } 
+
     // Blank
     public class Accounting : EDAM.Accounting {}
     public class BusinessNotebook : EDAM.BusinessNotebook {}
-    public class Data : EDAM.Data {}
     public class User : EDAM.User {}
 }
 

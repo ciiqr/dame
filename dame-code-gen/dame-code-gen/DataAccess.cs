@@ -18,23 +18,15 @@ namespace damecodegen
                 "    List<{returnType}> {returnName} = new List<{returnType}>();\n" +
                 "    PerformOperation((conn, command) =>\n" +
                 "    {\n" +
-                "        try\n" +
-                "        {\n" +
-                "            command.CommandText = \"SELECT \" + Fields.{tableName}.{fieldName} + \" FROM \" + Tables.{tableName};\n" +
+                "        command.CommandText = \"SELECT \" + Fields.{tableName}.{fieldName} + \" FROM \" + Tables.{tableName};\n" +
                 "\n" +
-                "            using (SQLDataReader reader = command.ExecuteReader())\n" +
-                "            {\n" +
-                "                while (reader.Read())\n" +
-                "                {\n" +
-                "                    {returnName}.Add(reader.TryGetValue<{returnType}>(Fields.{tableName}.{returnObjectField}));\n" +
-                "                }\n" +
-                "                reader.Close();\n" +
-                "            }\n" +
-                "        }\n" +
-                "        catch (Exception ex)\n" +
+                "        using (SQLDataReader reader = command.ExecuteReader())\n" +
                 "        {\n" +
-                "            Console.WriteLine('\\n');\n" +
-                "            Console.WriteLine(ex);\n" +
+                "            while (reader.Read())\n" +
+                "            {\n" +
+                "                {returnName}.Add(reader.TryGetValue<{returnType}>(Fields.{tableName}.{returnObjectField}));\n" +
+                "            }\n" +
+                "            reader.Close();\n" +
                 "        }\n" +
                 "    });\n" +
                 "    return {returnName};\n" +
@@ -59,23 +51,15 @@ namespace damecodegen
                 "    {returnType} {returnName} = {defaultValue};\n" +
                 "    PerformOperation((conn, command) =>\n" +
                 "    {\n" +
-                "        try\n" +
-                "        {\n" +
-                "            command.CommandText = \"SELECT \" + Fields.{tableName}.{fieldName} + \" FROM \" + Tables.{tableName};\n" +
+                "        command.CommandText = \"SELECT \" + Fields.{tableName}.{fieldName} + \" FROM \" + Tables.{tableName};\n" +
                 "\n" +
-                "            using (SQLDataReader reader = command.ExecuteReader())\n" +
-                "            {\n" +
-                "                if (reader.Read())\n" +
-                "                {\n" +
-                "                    {returnName} = ({returnType})reader.TryGetValue<{castType}>(Fields.{tableName}.{returnObjectField});\n" +
-                "                }\n" +
-                "                reader.Close();\n" +
-                "            }\n" +
-                "        }\n" +
-                "        catch (Exception ex)\n" +
+                "        using (SQLDataReader reader = command.ExecuteReader())\n" +
                 "        {\n" +
-                "            Console.WriteLine('\\n');\n" +
-                "            Console.WriteLine(ex);\n" +
+                "            if (reader.Read())\n" +
+                "            {\n" +
+                "                {returnName} = ({returnType})reader.TryGetValue<{castType}>(Fields.{tableName}.{returnObjectField});\n" +
+                "            }\n" +
+                "            reader.Close();\n" +
                 "        }\n" +
                 "    });\n" +
                 "    return {returnName};\n" +
@@ -101,21 +85,12 @@ namespace damecodegen
                 "{\n" +
                 "    PerformOperation((conn, command) =>\n" +
                 "    {\n" +
-                "        var comm = (SQLCommand)command;\n" +
-                "\n" +
                 "        command.CommandText = \"DELETE FROM \" + Tables.{tableName} + \" WHERE \" + Fields.{tableName}.{fieldName} + \"=\" + FieldParams.{tableName}.{fieldName};\n" +
                 "\n" +
                 "\n" +
-                "        comm.Parameters.AddWithValue(FieldParams.{tableName}.{fieldName}, {parameterName});\n" +
+                "        command.Parameters.AddWithValue(FieldParams.{tableName}.{fieldName}, {parameterName});\n" +
                 "\n" +
-                "        try\n" +
-                "        {\n" +
-                "            int affectedRowCount = command.ExecuteNonQuery();\n" +
-                "        }\n" +
-                "        catch (Exception ex)\n" +
-                "        {\n" +
-                "            Console.WriteLine(ex.Message);\n" +
-                "        }\n" +
+                "        command.ExecuteNonQuery();\n" +
                 "    });\n" +
                 "}";
 
@@ -161,21 +136,19 @@ namespace damecodegen
                 "    {returnType} {returnName} = {defaultValue};\n" +
                 "    PerformOperation((conn, command) =>\n" +
                 "    {\n" +
-                "        try\n" +
-                "        {\n" +
-                "            command.CommandText = \"SELECT * FROM \" + Tables.{tableName} + \" WHERE \" + Fields.{tableName}.{fieldName} + \"=\" + FieldParams.{tableName}.{fieldName};\n" +
-                "            command.Parameters.AddWithValue(FieldParams.{tableName}.{fieldName}, {parameterName});\n" +
+                "        command.CommandText = \"SELECT * FROM \" + Tables.{tableName} + \" WHERE \" + Fields.{tableName}.{fieldName} + \"=\" + FieldParams.{tableName}.{fieldName};\n" +
+                "        command.Parameters.AddWithValue(FieldParams.{tableName}.{fieldName}, {parameterName});\n" +
                 "\n" +
-                "            using (SQLDataReader reader = command.ExecuteReader())\n" +
+                "        using (SQLDataReader reader = command.ExecuteReader())\n" +
+                "        {\n" +
+                "            if (reader.Read())\n" +
                 "            {\n" +
-                "                if (reader.Read())\n" +
-                "                {\n" +
-                "                    var temp = new {returnType}();\n";
+                "                var temp = new {returnType}();\n";
 
             // Add All Fields
             foreach (var field in fields)
             {
-                string fieldString = "                    temp.{returnObjectFieldName} = reader.TryGetValue<{returnObjectFieldType}>(Fields.{tableName}.{returnObjectField});\n";
+                string fieldString = "                temp.{returnObjectFieldName} = reader.TryGetValue<{returnObjectFieldType}>(Fields.{tableName}.{returnObjectField});\n";
                 fieldString = fieldString.Replace(RETURN_OBJECT_FIELD_NAME, field.returnObjectFieldName);
                 fieldString = fieldString.Replace(RETURN_OBJECT_FIELD_TYPE, field.returnObjectFieldType);
                 fieldString = fieldString.Replace(RETURN_OBJECT_FIELD, field.returnObjectField);
@@ -185,22 +158,16 @@ namespace damecodegen
             // Add All subtype fields
             foreach (var subtype in subtypes)
             {
-                string fieldString = "                    temp.{subType_ParentFieldName} = {subtype_gettermethodName}({parameterName});\n";
+                string fieldString = "                temp.{subType_ParentFieldName} = {subtype_gettermethodName}({parameterName});\n";
                 fieldString = fieldString.Replace(SUBTYPE_PARENT_FIELD_NAME, subtype.parentFieldName);
                 fieldString = fieldString.Replace(SUBTYPE_GETTER_METHOD_NAME, subtype.gettermethodName);
                 method += fieldString;
             }
 
             method +=
-                "                    {returnName} = temp;\n" +
-                "                }\n" +
-                "                reader.Close();\n" +
+                "                {returnName} = temp;\n" +
                 "            }\n" +
-                "        }\n" +
-                "        catch (Exception ex)\n" +
-                "        {\n" +
-                "            Console.WriteLine('\\n');\n" +
-                "            Console.WriteLine(ex);\n" +
+                "            reader.Close();\n" +
                 "        }\n" +
                 "    });\n" +
                 "    return {returnName};\n" +
@@ -228,16 +195,25 @@ namespace damecodegen
                 this.returnObjectFieldName = returnObjectFieldName;
             }
         }
-
-        public static string AddObject(string methodName, string parameterName, string parameterType, string tableName, AddObjectField[] fields)
+        public class AddObjectSubtype
         {
+            public string parentFieldName;
+            public string addermethodName;
+            public AddObjectSubtype(string parentFieldName, string addermethodName)
+            {
+                this.parentFieldName = parentFieldName;
+                this.addermethodName = addermethodName;
+            }
+        }
+
+        public static string AddObject(string methodName, string parameterName, string parameterType, string tableName, AddObjectField[] fields, AddObjectSubtype[] subtypes)
+        {
+            // TODO: Should I change to return bool?
             string method =
                 "public void {methodName}({parameterType} {parameterName})\n" +
                 "{\n" +
                 "    PerformOperation((conn, command) =>\n" +
                 "    {\n" +
-                "        var comm = (SQLCommand)command;\n" +
-                "\n" +
                 "        command.CommandText = \"INSERT INTO \" + Tables.{tableName} + \"(\" + Fields.Join(\n";
 
             // Add Field Names
@@ -265,14 +241,25 @@ namespace damecodegen
             // Add Parameters Values
             foreach (var fieldParam in fields)
             {
-                string paramString = "        comm.Parameters.AddWithValue(FieldParams.{tableName}.{fieldName}, {parameterName}.{returnObjectFieldName});\n";
+                string paramString = "        command.Parameters.AddWithValue(FieldParams.{tableName}.{fieldName}, {parameterName}.{returnObjectFieldName});\n";
                 paramString = paramString.Replace(FIELD_NAME, fieldParam.fieldName);
                 paramString = paramString.Replace(RETURN_OBJECT_FIELD_NAME, fieldParam.returnObjectFieldName);
                 method += paramString;
             }
 
             method +=
-                "        int affectedRowCount = command.ExecuteNonQuery();\n" +
+                "        command.ExecuteNonQuery();\n" +
+                "\n";
+
+            // Add All subtype fields
+            foreach (var subtype in subtypes)
+            {
+                string fieldString = "                {subtype_addermethodName}(temp.{subType_ParentFieldName});\n";
+                fieldString = fieldString.Replace(SUBTYPE_PARENT_FIELD_NAME, subtype.parentFieldName);
+                fieldString = fieldString.Replace(SUBTYPE_ADDER_METHOD_NAME, subtype.addermethodName);
+                method += fieldString;
+            }
+            method +=
                 "    });\n" +
                 "}";
 
@@ -296,7 +283,6 @@ namespace damecodegen
         }
 
         // TODO: Add events for these different methods
-        // TODO: Generate the entire partial class
 
         // TODO: Maybe Add a param for public vs private this way we can specify subtypes as private
 
@@ -312,11 +298,8 @@ namespace damecodegen
             string method =
                 "public bool {methodName}({parameterType} {parameterName})\n" +
                 "{\n" +
-                "    bool success = false;\n" +
-                "    PerformOperation((conn, command) =>\n" +
+                "    bool success = PerformOperation((conn, command) =>\n" +
                 "    {\n" +
-                "        var comm = (SQLCommand)command;\n" +
-                "\n" +
                 "        command.CommandText = \"UPDATE \" + Tables.{tableName} + \" SET \" + Fields.Join(\n";
 
             foreach (var field in fields)
@@ -332,17 +315,16 @@ namespace damecodegen
 
             foreach (var field in fields)
             {
-                string fieldString = "            comm.Parameters.AddWithValue(FieldParams.{tableName}.{fieldName}, {parameterName}.{parameterFieldName});\n";;
+                string fieldString = "        command.Parameters.AddWithValue(FieldParams.{tableName}.{fieldName}, {parameterName}.{parameterFieldName});\n";;
                 fieldString = fieldString.Replace(FIELD_NAME, field.fieldName);
                 fieldString = fieldString.Replace(PARAMETER_FIELD_NAME, field.parameterFieldName);
                 method += fieldString;
             }
 
             method +=
-                "            comm.Parameters.AddWithValue(FieldParams.{tableName}.{fieldName}, {parameterName}.{parameterUniqueIdFieldName});\n" + 
+                "        command.Parameters.AddWithValue(FieldParams.{tableName}.{fieldName}, {parameterName}.{parameterUniqueIdFieldName});\n" + 
                 "\n" +
-                "            command.ExecuteNonQuery();\n" +
-                "            success = true;\n" +
+                "        command.ExecuteNonQuery();\n" +
                 "    });\n" +
                 "    return success;\n" +
                 "}";
@@ -357,6 +339,7 @@ namespace damecodegen
             return method;
         }
 
+        #region Constants
         static string RETURN_TYPE = "{returnType}";
         static string METHOD_NAME = "{methodName}";
         static string RETURN_NAME = "{returnName}";
@@ -372,9 +355,10 @@ namespace damecodegen
         static string RETURN_OBJECT_FIELD_TYPE = "{returnObjectFieldType}";
         static string SUBTYPE_PARENT_FIELD_NAME = "{subType_ParentFieldName}";
         static string SUBTYPE_GETTER_METHOD_NAME = "{subtype_gettermethodName}";
+        static string SUBTYPE_ADDER_METHOD_NAME = "{subtype_addermethodName}";
         static string PARAMETER_UNIQUE_ID_FIELD_NAME = "{parameterUniqueIdFieldName}";
         static string PARAMETER_FIELD_NAME = "{parameterFieldName}";
-
+        #endregion
     }
 }
 

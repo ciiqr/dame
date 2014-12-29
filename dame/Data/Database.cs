@@ -79,24 +79,28 @@ namespace dame.Data
         private delegate void DatabaseOperationDelegate(IDbConnection conn, SQLCommand command);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void PerformOperation(DatabaseOperationDelegate handler)
+        private bool PerformOperation(DatabaseOperationDelegate handler)
         {
+            // if the operation was successful
+            var successful = false;
             var conn = dbConnectionPool.Get();
             SQLCommand command = (SQLCommand)conn.CreateCommand();
             try
             {
                 handler(conn, command);
+                successful = true;
             }
-            #if DEBUG
             catch (Exception ex)
             {
+                #if DEBUG
                 Console.WriteLine(ex);
+                #endif
             }
-            #endif
             finally
             {
                 StopOperation(conn, command);
             }
+            return successful;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -365,7 +365,7 @@ CREATE TABLE LinkedNotebooks (
 CREATE TABLE SharedNotebooks (
 	notebookLuid		INTEGER,
 	id					INT		PRIMARY KEY		NOT NULL,
-	userId				INT,
+	userId				INT, -- TODO: Is there supposed to be a reference to the Users table? I don't think there is but I just want to make sure
 	email				TEXT,
 	notebookModifiable	BOOLEAN,
 	requireLogin		BOOLEAN,

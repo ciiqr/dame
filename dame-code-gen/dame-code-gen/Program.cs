@@ -1,8 +1,12 @@
-﻿using System;
+﻿#define GENERATE_FILES
+using System;
+using System.Text;
 using GetObjectField = damecodegen.DataAccess.GetObjectField;
 using GetObjectSubtype = damecodegen.DataAccess.GetObjectSubtype;
 using AddObjectField = damecodegen.DataAccess.AddObjectField;
+using AddObjectSubtype = damecodegen.DataAccess.AddObjectSubtype;
 using UpdateObjectField = damecodegen.DataAccess.UpdateObjectField;
+
 
 namespace damecodegen
 {
@@ -32,7 +36,7 @@ namespace damecodegen
             P(DataAccess.DeleteObject(fieldName:"Luid", methodName:"DeleteLinkedNotebook", parameterName:"luid", parameterType:"long", tableName:"LinkedNotebooks"));
         }
 
-        public static void GetObject()
+        public static void GetObject() // TODO: Get additional items
         {
             P(DataAccess.GetObject(returnType:"Note", methodName:"GetNote", parameterType:"long", parameterName:"luid", returnName:"note", defaultValue:"null", tableName:"Notes", fieldName:"Luid",
                 fields: new[] {
@@ -53,7 +57,7 @@ namespace damecodegen
                 subtypes: new[] {
                 new GetObjectSubtype("Attributes", "GetNoteAttributes"),
                 new GetObjectSubtype("Resources", "GetNoteResources"),
-                new GetObjectSubtype("TagNames", "GetNoteTags")
+                new GetObjectSubtype("TagNames", "GetNoteTagNames")
             }));
             P(DataAccess.GetObject(returnType:"NoteAttributes", methodName:"GetNoteAttributes", parameterType:"long", parameterName:"noteLuid", returnName:"attributes", defaultValue:"null", tableName:"NoteAttributes", fieldName:"NoteLuid",
                 fields: new[] {
@@ -242,9 +246,11 @@ namespace damecodegen
         {
             // TODO: The rest of the fields
             P(DataAccess.AddObject(methodName:"AddNote", parameterName:"note", parameterType:"EDAM.Note", tableName:"Notes",
-                fields: new[]{
+                fields: new[] {
                 // TODO: Is this correct?
                 new AddObjectField("Guid", "Guid")
+            }, subtypes: new AddObjectSubtype[] {
+                // TODO: Add the subtypes
             }));
         }
 
@@ -257,19 +263,41 @@ namespace damecodegen
             }));
         }
 
-        public static void Main(string[] args)
+        public static void GenerateDataAccess()
         {
+            // TODO: Generate the entire partial class
             GetAllOfField();
             GetSingletonField();
             DeleteObject();
             GetObject();
             AddObject();
             UpdateObject();
+
+            #if GENERATE_FILES
+            CreateDataAccessFile();
+            #endif
         }
 
+        public static void Main(string[] args)
+        {
+            GenerateDataAccess();
+        }
+
+        #if GENERATE_FILES
+        public static StringBuilder dataAccessContent = new StringBuilder();
+        public static void P(string text)
+        {
+            dataAccessContent.AppendLine(text);
+        }
+        public static void CreateDataAccessFile()
+        {
+            System.IO.File.WriteAllText("./test.txt", dataAccessContent.ToString());
+        }
+        #else
         public static void P(string text)
         {
             Console.WriteLine(text);
         }
+        #endif
     }
 }
